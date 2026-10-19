@@ -83,12 +83,14 @@ A minimal harness might include only guides and a Makefile. A production harness
 Your harness should reflect **your** system's constraints, not anyone else's. A harness for a code-generation tool looks different from a harness for data classification, which looks different from a harness for bug triage.
 
 What is constant across all these harnesses:
+
 - The five control layers exist (with different implementations)
 - Documentation is explicit and durable
 - Constraints are encoded, not implied
 - Failures are detectable and debuggable
 
 What varies:
+
 - The specific components and tools
 - The strictness of each boundary
 - The fidelity of observability

@@ -34,6 +34,7 @@ A production-grade harness has three **essential** components, four that are **s
 **Audience:** Any agent or human operating inside the codebase.
 
 **Key Principles:**
+
 - **Portable Across Tools**: `AGENTS.md` is an open standard ([agents.md](https://agents.md)) supported by GitHub Copilot, Cursor, OpenAI Codex, and others (Claude Code requires a shim — see footnote) — see [READING.md](READING.md#specifications) for per-tool adoption details. Agent context placed in tool-specific files (`.github/copilot-instructions.md`, `.cursorrules`, or a `CLAUDE.md` with real content) is readable by only one tool.[^claude-shim]
 - **Operational Context First**: Keep `AGENTS.md` focused on roles, boundaries, module context, escalation paths, and known footguns.
 - **Canonical Invariants Elsewhere**: Keep hard non-negotiables in `INVARIANTS.md`.
@@ -45,23 +46,27 @@ A production-grade harness has three **essential** components, four that are **s
 **Recommended Structure:**
 
 **Root `AGENTS.md`**
+
 - One per repository
 - Defines all agents' responsibilities, roles, and hierarchies
 - Establishes repository-wide invariants ("PII must never be logged")
 - Lists known footguns and how to avoid them
 
 **Module-Level `AGENTS.md` (Optional)**
+
 - Refines or extends the root for specific modules
 - Captures local context close to the code where it matters
 - Cannot contradict the root; only extends or tightens constraints
 - Inherits all root invariants automatically
 
 **Scope split with `INVARIANTS.md`**
+
 - `AGENTS.md`: operational context (roles, boundaries, module context, escalation, footguns, links to decision records)
 - `INVARIANTS.md`: hard non-negotiables (security/compliance/data/API guarantees)
 - In `AGENTS.md`, add a blockquote at the top that points agents to `INVARIANTS.md` — do not summarise the constraints inline
 
 **Progressive discovery pattern:**
+
 1. Read root `AGENTS.md` first
 2. When entering a submodule, look for a local `AGENTS.md`
 3. Merge local rules with inherited root rules
@@ -129,17 +134,20 @@ See [Build Your Harness §2.1](07-Build-Your-Harness.md) for a fully worked root
 **Audience:** Human contributors, team members, and stakeholders. Not the primary entry point for agents — agents enter through `AGENTS.md`, which is loaded directly or via agent-specific shims.
 
 **Key Principles:**
+
 - **Tight description**: one paragraph on what the repo is and what problem it solves
 - **Minimal quickstart**: the fewest commands to install and run; full setup lives in `docs/SETUP.md`
 - **Gateway, not an encyclopedia**: link to canonical sources; do not duplicate their content
 
 **Good Contents:**
+
 - One-paragraph description: what it is, what problem it solves, key technical choices
 - Minimal quickstart: prerequisites callout and the two or three commands to get started
 - "For Agents and Contributors" link list: `AGENTS.md`, `INVARIANTS.md`, `docs/`
 - External references: team wiki, Jira, API specs, related projects or services (always present; add a reviewer callout if none are known yet)
 
 **What NOT to Include:**
+
 - Full setup instructions → `docs/SETUP.md`
 - Architecture diagrams or component descriptions → `docs/ARCHITECTURE.md`
 - Role definitions or agent instructions → `AGENTS.md`
@@ -187,6 +195,7 @@ make run      # start locally
 **Audience:** Any agent or human operating in the codebase, plus maintainers responsible for policy and compliance governance.
 
 **Key Principles:**
+
 - **Canonical-source rule**: each invariant has one location — here. `AGENTS.md` and other docs reference by link, never by duplicating the text
 - **Separate from AGENTS.md**: some constraints are so critical they deserve their own document for visibility and governance; keeping them here also keeps `AGENTS.md` focused on operational context
 
@@ -214,6 +223,7 @@ Explicitly list **non-negotiables** — constraints that cannot be relaxed witho
 **Audience:** Any AI tool operating in this codebase.
 
 **Key Principles:**
+
 - **Portable Across Models and Tools**: `SKILL.md` under `.agents/skills/` is an open standard ([agentskills.io](https://agentskills.io/specification)) supported by GitHub Copilot, OpenAI Codex, Cursor, and others — see [READING.md](READING.md#specifications) for per-tool adoption details. Skills placed in tool-specific directories (`.claude/`, `.cursor/`, `.github/`) are readable by only one tool.
 - **Declarative, Not Instructional**: State what the agent can do, not how to prompt it
 - **Stable Across Repo Lifetime**: Should not require constant rewrites as the codebase evolves
@@ -260,6 +270,7 @@ Use this skill when the user needs to work with PDF files...
 **Audience:** Any agent or human operating in the codebase.
 
 **Key Principles:**
+
 - **Architecture docs are the design authority**: when code diverges, treat it as a signal to reconcile — either the code drifted from design intent, or the docs need updating
 - **Maintain as living documentation**: Docs should evolve with the system
 - **Searchable and linkable**: Use plain Markdown with durable anchors
@@ -290,6 +301,7 @@ docs/
 **Audience:** Any agent or human operating in the codebase.
 
 **Key Principles:**
+
 - **OpenAPI-first**: API behavior is contract-defined, not implicit
 - **Machine-verifiable**: Schemas must be testable in automation
 - **Generator-friendly**: Specs should support docs and client/server generation
@@ -334,6 +346,7 @@ This prevents spec drift and enables schema validation as a sensor in CI.
 **Audience:** Any agent or human operating in the codebase.
 
 **Key Principles:**
+
 - **Tool-agnostic**: The Makefile abstracts from the tools used (e.g., Maven, Gradle, npm) and provides a consistent interface for all agents and humans.
 - **Works equally for humans and agents**: Both can run `make test`
 - **Prevents command hallucination**: Agents cannot invent commands; they should use only what's in the Makefile
@@ -391,6 +404,7 @@ check: lint typecheck test  ## Run all validation (lint + typecheck + test)
 **Audience:** Any agent or human operating in the codebase, plus maintainers responsible for policy and architecture governance.
 
 **Key Principles:**
+
 - Keep canonical sources explicit — link from `AGENTS.md` rather than duplicating content
 - Prefer durable, linked records over tribal knowledge
 - Encode policy in automation wherever possible
@@ -406,6 +420,7 @@ Without decision history, agents and humans may repeat old debates. A record of 
 Recommended: keep a concise `DECISIONS.md` index (status, title, link) and store full decisions in `docs/adr/`. For smaller repos, a single `DECISIONS.md` with inline records is fine. Either way, ensure decisions are discoverable from `AGENTS.md`.
 
 For each decision, include at least:
+
 - Context
 - Decision
 - Alternatives considered
@@ -446,6 +461,7 @@ Example `DECISIONS.md` layout:
 Human-facing only — most agents do not read it. Put agent escalation policy in `AGENTS.md` instead.
 
 Explain:
+
 - What good PRs look like
 - Required checks (which `make` targets must pass)
 - When human review is mandatory (reviewer checklist)
@@ -459,6 +475,7 @@ Root `AGENTS.md ## Conventions` should link here, not restate the rules.
 Don't **explain** style; **encode** it.
 
 Every automated check is a **sensor**. Encode style rules in:
+
 - `.editorconfig` (cross-tool compatibility)
 - Linter configs (`ruff.toml`, `.eslintrc`)
 - Formatters (`black`, `prettier`)
@@ -468,6 +485,7 @@ When agents run these, they self-correct without needing lectures about style.
 #### .agentignore
 
 If tools support it, explicitly exclude:
+
 - Secrets and credentials
 - Generated files
 - Vendored code

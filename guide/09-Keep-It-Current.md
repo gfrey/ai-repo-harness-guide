@@ -64,12 +64,14 @@ flowchart TD
 ```
 
 **When to run a full audit:**
+
 - Quarterly minimum
 - After a major refactor or significant new module
 - After an agent incident — a mistake the harness should have prevented
 - When adopting a new AI tool or agent
 
 **When to run a health check:**
+
 - Monthly
 - After adding, renaming, or removing a module
 - After changing any `make` target

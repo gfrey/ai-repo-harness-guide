@@ -68,7 +68,7 @@ A `.cursor-plugin/` marketplace manifest is included for future Cursor Marketpla
 
 ## Version
 
-- **Current**: 1.1.0 (2026-08-05) — see [CHANGELOG.md](CHANGELOG.md) for history
+- **Current**: 1.1.1 (2026-10-19) — see [CHANGELOG.md](CHANGELOG.md) for history
 - **Site**: [opensource.adobe.com/ai-repo-harness-guide](https://opensource.adobe.com/ai-repo-harness-guide/)
 - **Author**: [Arne Franken](https://github.com/afranken)
 - **Audience**: Technical practitioners building AI-assisted systems

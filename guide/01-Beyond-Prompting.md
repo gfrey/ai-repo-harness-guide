@@ -5,6 +5,7 @@
 AI adoption in software engineering has followed a familiar pattern: individual developers write effective prompts, experiment with different framings, and achieve impressive results—but **only within their own tribal knowledge and prompt engineering skill**.
 
 Without a harness, outcomes depend heavily on:
+
 - Individual prompt quality and intuition
 - Institutional knowledge that leaves with departing team members
 - Non-deterministic behavior across different scenarios

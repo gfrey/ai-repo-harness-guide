@@ -6,6 +6,13 @@ All notable changes to *Repository Harnesses for AI Coding Agents: A Practical G
 
 ---
 
+## 1.1.1 (2026-10-19)
+
+### Fixed
+- **List rendering** ([`01`](01-Beyond-Prompting.md), [`02`](02-What-a-Harness-Is.md), [`03`](03-Five-Control-Layers.md), [`04`](04-Harness-Components.md), [`05`](05-How-Agents-Navigate.md), [`06`](06-Reference-Layout.md), [`07`](07-Build-Your-Harness.md), [`08`](08-Migrate-Your-Harness.md), [`09`](09-Keep-It-Current.md)): added the blank line that the Zensical (Python-Markdown) renderer requires before a list. Without it, lists that directly followed a paragraph or bold lead-in rendered as running text on the published site.
+
+---
+
 ## 1.1.0 (2026-08-05)
 
 ### Changed

@@ -80,6 +80,7 @@ my-service/
 #### AGENTS.md (Root)
 **Purpose**: Repository-wide operational context, roles, and known hazards
 **Key content**:  
+
 - Repository overview and prose component summary, with a forward link to docs/ARCHITECTURE.md
 - Link to INVARIANTS.md at the top (blockquote, read-first instruction)
 - Agent authorization (Authority, Escalation per role)
@@ -126,6 +127,7 @@ my-service/
 #### docs/CONTRIBUTING.md
 **Purpose**: How to work in this repo — for human contributors only. Most agents do not read it; agent escalation policy belongs in `AGENTS.md`.
 **Key content**:
+
 - Code review expectations and what makes a good PR
 - Required checks (`make check`, passing tests)
 - Branch naming, commit style (e.g., [Conventional Commits](https://www.conventionalcommits.org/)), PR template
@@ -189,6 +191,7 @@ flowchart TD
 ## This Structure Covers Layers 1–4 Fully, Layer 5 Partially
 
 This layout implements the Guides, Sensors, and Context layers fully. The Makefile and `INVARIANTS.md` give Layer 4 (Tool & Permission Boundaries) soft enforcement — see [Five Control Layers](03-Five-Control-Layers.md#layer-4-tool--permission-boundaries) for the soft-vs-hard distinction. To reach full production readiness, wire up the remaining pieces:
+
 - ✅ Deploy with documented, soft-enforced constraints
 - ✅ Scale to multiple contributors (standards are documented)
 - ✅ Debug issues (decisions are auditable)
@@ -205,6 +208,7 @@ This layout implements the Guides, Sensors, and Context layers fully. The Makefi
 This layout is a **reference example**. To build one for your own repository, follow the **step-by-step implementation guide**:
 
 → See **[Build Your Harness](07-Build-Your-Harness.md)** for:
+
 - Discovery prompts to analyze your repository
 - Phase-by-phase creation workflow (5 phases)
 - Ready-to-use prompts for building each component

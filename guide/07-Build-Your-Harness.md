@@ -64,6 +64,7 @@ The structure prompt asks the agent to inventory languages and frameworks, repos
 **Prompt**: [`.agents/skills/harness-setup/references/discovery.md`](skills/harness-setup/references/discovery.md) (Section 1.1).
 
 **What this reveals:**
+
 - Language determines which tools to encode in the Makefile
 - Test structure shows where sensors already exist
 - Existing docs show topics and scope — but identifiers in prose docs (env var names, route paths, queue names) are treated as unverified claims until confirmed against code
@@ -138,6 +139,7 @@ The constraint prompt covers eight dimensions: reliability constraints (SLAs, cr
 **Prompt**: [`.agents/skills/harness-setup/references/discovery.md`](skills/harness-setup/references/discovery.md) (Section 1.2).
 
 **What this reveals:**
+
 - Hard constraints go into INVARIANTS.md
 - Known footguns go into AGENTS.md (incident history is the richest source)
 - Documentation needs shape the docs/ folder structure
@@ -205,6 +207,7 @@ The bootstrap prompts default to **section-by-section dialogue**: for each secti
 ### 2.1 Create Root AGENTS.md
 
 This is the centerpiece. It documents:
+
 - Your service's purpose and a prose component overview (the diagram lives in `docs/ARCHITECTURE.md`)
 - A read-first link to `INVARIANTS.md` for non-negotiable constraints (no inline summary)
 - Known footguns (hazards)
@@ -340,6 +343,7 @@ The root `AGENTS.md` gives repository-wide context. Module-level `AGENTS.md` fil
 This is a fundamental harness concept: agents should read the nearest relevant `AGENTS.md` before changing code in that area.
 
 Module-level `AGENTS.md` files should:
+
 - Inherit repository-wide rules from the root `AGENTS.md` and `INVARIANTS.md`
 - Add local context, workflows, and footguns for that subtree
 - Tighten rules when needed for that area

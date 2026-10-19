@@ -29,6 +29,7 @@ Failures at any step trigger the decision tree in [Looping on Failure](#looping-
 **What happens:** Agent enters the repository and reads foundational documents.
 
 **Documents read:**
+
 - `AGENTS.md` (root) — Auto-loaded via tool-specific shim or native support; establishes repository-wide roles, footguns, and the link to `INVARIANTS.md`
 - `INVARIANTS.md` — What absolutely cannot be changed?
 - Relevant `SKILL.md` files — What can I do, and how do I do it for this task?
@@ -52,6 +53,7 @@ Agent starts CodeReview task
 **What happens:** Agent assembles the specific context needed for this task.
 
 **Context sources:**
+
 - Module-level `AGENTS.md` (if applicable) — Local constraints for this area of code; keep these files concise to avoid context pollution
 - Architecture docs (`docs/ARCHITECTURE.md`) — How does this part of the system fit?
 - Decision records (`docs/DECISIONS.md`, if linked from AGENTS.md) — Why were previous choices made this way?
@@ -79,11 +81,13 @@ Task: Review a new API endpoint proposal
 **What happens:** Agent takes action, but only through permitted channels.
 
 **Allowed surfaces:**
+
 - Code modifications (within boundaries specified in AGENTS.md)
 - Commands via `make` targets (no direct shell commands)
 - Tool calls (pre-approved tools with pre-defined inputs/outputs)
 
 **Validation:** Each action is checked against tool & permission boundaries.
+
 - Is this tool in the allowed list?
 - Are the inputs valid and safe?
 - Does this operation require human approval? (If yes, agent stops and asks)
@@ -110,6 +114,7 @@ Agent proposes: "I'll update the CI/CD config"
 **What happens:** Agent runs automated checks on its output **before** declaring success.
 
 **Checks performed:**
+
 - **Tests**: `make test` passes
 - **Linters/formatters**: `make lint` and `make format` pass
 - **Type checks**: `make typecheck` passes
@@ -119,6 +124,7 @@ Agent proposes: "I'll update the CI/CD config"
 **Convenience target:** Most repositories provide `make check` to run all critical sensors at once.
 
 **What if checks fail?**
+
 - If failure is clear (e.g., test failure), agent diagnoses and retries
 - If failure is ambiguous, agent explains the failure to a human and stops
 - If check indicates a constraint violation, agent backtracks and tries a different approach
@@ -155,6 +161,7 @@ Agent runs: make check
 **Output characteristics:**
 
 **Small diffs:** Changes are focused and easy to review.
+
 - Don't make 3 unrelated changes in one PR; make 3 separate PRs
 - If possible, break large changes into reviewable chunks
 
@@ -232,6 +239,7 @@ flowchart TD
 ```
 
 **Key principle:** At each step, failure is a signal, not a termination. The agent has options:
+
 1. **Auto-fix and retry** (if the solution is clear)
 2. **Diagnose and explain** (if requiring human intervention)
 3. **Escalate** (if beyond agent authority)

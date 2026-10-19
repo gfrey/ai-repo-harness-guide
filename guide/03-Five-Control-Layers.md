@@ -26,6 +26,7 @@ Guides reduce reliance on prompting by making expectations explicit and durable 
 ### Key Mechanism Examples
 
 **[`AGENTS.md`](https://agents.md) — Operational Context**
+
 - Root repository document defining all agents' responsibilities
 - Optional module-level documents that refine or extend the root
 - Supports progressive discovery: read root first, then nearest module file as the agent moves down folders
@@ -33,6 +34,7 @@ Guides reduce reliance on prompting by making expectations explicit and durable 
 - Establishes operational invariants, known footguns, and internal boundaries (with hard non-negotiables extracted to `INVARIANTS.md` when needed)
 
 **[`Skills`](https://agentskills.io/) — Capability & Method Contract**
+
 - A repository can define multiple skills, each with its own `SKILL.md` (typically under a skills directory such as `.agents/skills/`).
 - A skill is a **Layer 1 document** — read upfront, feedforward — whose content defines the agent's permitted action space. The SKILL.md file itself lives in Layer 1 because its mechanism is documentation: the agent reads what it may do before acting. The permissions it describes are *enforced* by Layer 4 mechanisms (Makefile restrictions, runtime tool controls); the skill is the declaration, Layer 4 is the enforcement.
 - Lists what the agent **can** do in this repo (read and analyze code, propose changes, run tests, etc.)
@@ -40,6 +42,7 @@ Guides reduce reliance on prompting by making expectations explicit and durable 
 - Separates capability declaration from operational context (that lives in `AGENTS.md`) and hard restrictions (that live in `INVARIANTS.md`)
 
 **`INVARIANTS.md` — Architecture & Safety Constraints**
+
 - Domain-specific rules ("PII must never appear in logs")
 - Coding standards ("All API responses must use OpenAPI v3.x contracts")
 - Integration constraints ("Agents cannot directly modify production databases")
@@ -73,21 +76,25 @@ Sensors operate in a feedback loop: agent produces output → sensors check → 
 ### Key Mechanism Examples
 
 **Tests and Linters**
+
 - Unit tests on generated code
 - Style/formatting checks
 - Domain-specific validators ("does this code use the approved encryption library?")
 
 **Schema and Contract Validation**
+
 - JSON schema validation on structured outputs
 - OpenAPI compliance checks on generated API endpoints
 - Type checking on generated code
 
 **Policy Checks**
+
 - Security policy enforcement ("this code does not call unsafe system functions")
 - Performance gates ("generated query does not do N+1 lookups")
 - Compliance checks ("PII handling follows our privacy standards")
 
 **"LLM as Judge" Loops**
+
 - Using another model instance to evaluate agent output
 - Example: agent generates code, second model checks if it correctly implements the spec
 - Cost-effective for problems where judgment is domain-specific but hard to automate
@@ -104,6 +111,7 @@ When a sensor rejects output, provide the agent (or human) with a clear reason *
 
 **Layered Severity**
 Some sensor failures should block merging; others should just log warnings. Use a tiered system:
+
 - **Critical** (hard block): Security policies, data contract violations
 - **Important** (warnings + human gate): Code quality, style
 - **Nice-to-have** (informational): Metrics, optimization suggestions
@@ -111,6 +119,7 @@ Some sensor failures should block merging; others should just log warnings. Use 
 ### Why This Layer Matters
 
 Sensors catch errors before they propagate. In a system without sensors, a bad agent output might:
+
 - Get committed to the main branch
 - Be deployed to production
 - Cause customer impact
@@ -133,25 +142,30 @@ This layer establishes the "ground truth" that keeps agent decisions accurate an
 ### Key Mechanism Examples
 
 **Context Loading Rules**
+
 - What information is automatically included in every prompt
 - What information is retrieved on-demand based on the task
 - What information is explicitly excluded (e.g., other agents' task descriptions)
 
 **Context Pruning and Summarization**
+
 - If retrieved context exceeds the token limit, how is it condensed?
 - Which parts are most important? (Preserve constraints; summarize examples)
 - Is context deduplicated across runs?
 
 **State Persistence Rules**
+
 - What is remembered across task runs? (e.g., "the list of files modified in this session")
 - What is reset between runs? (e.g., "the intermediate reasoning steps")
 - How is state versioned or rolled back?
 
 **Hallucination Amplification Prevention**
+
 - If an agent references something that might not exist, how is it verified?
 - If an agent makes an assumption, how is it documented and checked?
 
 Representative policy pattern:
+
 - Load only high-value context (README, root/nearest `AGENTS.md`, relevant decisions)
 - Prune aggressively when limits are reached (keep constraints, drop low-value examples)
 - Persist execution-critical state across retries (changed files, decisions made)
@@ -162,6 +176,7 @@ Representative policy pattern:
 This layer prevents **context rot**: the slow degradation of agent output quality as models accumulate stale or contradictory information. (Progressive discovery — reading the nearest `AGENTS.md` as the agent traverses subdirectories — is the Layer 1 mechanism that feeds well-scoped context into this layer.)
 
 Without explicit context rules, you get:
+
 - Agents making decisions based on outdated documentation
 - Hallucination feedback loops ("the model thinks something is true because it has said it before")
 - Forgotten constraints (because they fell out of the context window)
@@ -190,17 +205,20 @@ In our experience, undefined or poorly enforced tool boundaries are a common sou
 The foundational engineering-time anchor for this layer: agents run only commands exposed via one named target list — typically a `Makefile` (also `justfile`, `Taskfile.yml`). The hard rule is encoded as a top-of-file comment: `# Agents: run only make targets listed here. No direct shell commands.` Primary validation conventionally lives at `make check` (lint + typecheck + test).
 
 This provides:
+
 - **Discoverability**: `make help` shows the full agent-allowed action set
 - **Single control point**: add a target → both humans and agents see the new action; remove one → the agent's action set narrows immediately
 - **Tooling-agnostic**: abstracts whether you use pytest, jest, ruff, or any other tool
 - **Prevention of command hallucination**: the agent cannot invent commands the `Makefile` doesn't expose
 
 **Tool Inventory and Specification**
+
 - Explicit list of available tools (no tool hallucination)
 - For each tool: inputs, outputs, side effects, and constraints
 - Example tools: "file_read", "file_write", "run_tests", "submit_pr", "query_codebase"
 
 **Input Validation and Sanitization**
+
 - What inputs does each tool accept?
 - What constraints are enforced? (file path cannot escape the repo, PR title must be < 200 chars, etc.)
 - What does the tool do if given invalid input?
@@ -208,6 +226,7 @@ This provides:
 Example: "The `run_command` tool only accepts commands from an explicit list in the `Makefile`. Any other command is rejected with an error."
 
 **Permission and Approval Gates**
+
 - Which operations require human approval before execution?
 - What triggers an approval request? (Modifying `docs/` directory, deploying to production, deleting files)
 - What information does the human reviewer receive?
@@ -215,12 +234,14 @@ Example: "The `run_command` tool only accepts commands from an explicit list in 
 Example: "File deletions, API endpoint changes, and dependencies updates require human review before execution. Agent can stage the change but cannot commit it."
 
 **Forbidden Operation List**
+
 - What can the agent never do, regardless of how cleverly it tries?
 - Example: "No direct database writes. No credential use without explicit approval. No modification of CI/CD configuration without security team review."
 
 ### Why This Layer Matters
 
 Many agent failures occur not because the agent made a logical error, but because:
+
 - It called a tool that doesn't exist (hallucination)
 - It called a tool with invalid inputs
 - It attempted something dangerous (deleting all files, modifying credentials)
@@ -243,16 +264,19 @@ This is the most stage-dependent of the five layers. **Engineering-time** concer
 ### Key Mechanism Examples
 
 **Token Budget for Auto-Loaded Content** *(engineering-time)*
+
 - Files pulled into context before the first message — root `AGENTS.md`, `INVARIANTS.md`, the `CLAUDE.md` shim — must stay within a strict budget (working heuristic: ≤ 4,000 tokens total; see [chapter 09 Context Budget](09-Keep-It-Current.md#context-budget) for the basis, how to recalibrate, and the per-agent tokenizer caveat)
 - Exceeding the budget signals that content has crept into root context that belongs in a skill or `docs/` file
 - Measured explicitly by the full audit prompt in [chapter 09](09-Keep-It-Current.md)
 
 **Progressive Discovery** *(engineering-time)*
+
 - Small files, links instead of monoliths: nearest module-level `AGENTS.md` rather than one large root file; on-demand skills rather than auto-loaded ones; `docs/` referenced from `AGENTS.md` rather than inlined
 - The agent pays only for the tokens needed for the current task, not every task
 - Without this, a growing repo silently raises the per-invocation cost of every agent action
 
 **Maintenance Cadence** *(engineering-time)*
+
 - Regular health check (high cadence) or full audit (lower cadence) ([chapter 09](09-Keep-It-Current.md))
 - Detects rot — broken references, stale commands, drift — before it silently misleads agents
 - The harness itself has a lifecycle — see *Lifecycle States* below
@@ -265,12 +289,14 @@ Cost limits, retry ceilings, health checks, and abort conditions make agents ope
 **Observability != Logs**
 
 Having logs is necessary but not sufficient at either stage:
+
 - *Engineering-time*: an audit trail of harness changes (`CHANGELOG.md`, git history) and structured assessments tracked across runs via the `harness-inspect` full audit (see [chapter 09](09-Keep-It-Current.md))
 - *Runtime*: **Metrics** (cost per task, success rate, latency), **Traces** (full visibility into agent steps), **Alerts** (automatic notification on failure), **Audit logs** (immutable record of agent actions, for compliance and debugging)
 
 **Lifecycle States**
 
 Two distinct lifecycles ride on this layer:
+
 - *Engineering-time — the harness's lifecycle*: built ([chapter 07](07-Build-Your-Harness.md)) → migrated when partial ([chapter 08](08-Migrate-Your-Harness.md)) → maintained ([chapter 09](09-Keep-It-Current.md))
 - *Runtime — the agent invocation's lifecycle*: **Idle** (waiting for work) → **Running** (executing) → **Succeeded** / **Failed** / **Paused** (human intervention). You should be able to query the state of any agent at any time.
 
@@ -314,6 +340,7 @@ flowchart LR
 ```
 
 A failure in any layer shows up in a specific way:
+
 - **Guide failure**: Agent produces output that violates documented constraints
 - **Sensor failure**: Agent output passes guides but fails sensors
 - **Context failure**: Agent makes decisions based on stale or hallucinated information

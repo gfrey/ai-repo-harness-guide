@@ -141,6 +141,7 @@ The prompt handles three cases: (1) `CLAUDE.md` does not exist — create the sh
 **Prompt**: [`.agents/skills/harness-setup/references/claude.md`](skills/harness-setup/references/claude.md).
 
 **Expected output**:
+
 - `CLAUDE.md` has 3–5 lines (header + `@`-references, nothing else)
 - If content was migrated: every constraint from the old `CLAUDE.md` is findable in `AGENTS.md` or `INVARIANTS.md`; diff old vs. new `AGENTS.md` to confirm nothing was dropped
 
@@ -149,6 +150,7 @@ The prompt handles three cases: (1) `CLAUDE.md` does not exist — create the sh
 ## Migration 2: Consolidate Rules and Skills into .agents/skills/
 
 **Applies when**: You have any of the following:
+
 - `.cursorrules` or files under `.cursor/rules/`
 - `.github/copilot-instructions.md` or files under `.github/instructions/`
 - Files under `.claude/` that function as instructions or skills
@@ -228,6 +230,7 @@ The prompt enumerates qualifying subdirectories and reports for each: the path, 
 For each identified subdirectory, use the prompt in [Build Your Harness — Section 2.2](07-Build-Your-Harness.md#22-create-module-level-harnesses-agentsmd-in-subdirectories).
 
 After each module-level file is created:
+
 1. Remove the extracted content from root `AGENTS.md`
 2. Add a link from root `AGENTS.md` → module `AGENTS.md` in the Module Context section
 3. Add a link from module `AGENTS.md` → root `AGENTS.md` in its Navigation section
